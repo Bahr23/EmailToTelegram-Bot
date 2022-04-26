@@ -36,8 +36,6 @@ def get_last_messages():
 
 
 def get_link_from_html(html):
-    with open('data.html', 'w') as f:
-        f.write(html)
     soup = BeautifulSoup(html, 'lxml')
     return soup.find_all("a", {"style": "color:#4674ca;font-size:16px;font-weight:600;margin-right:10px;text-decoration:none"})
 
