@@ -1,0 +1,50 @@
+import imaplib
+import email
+from html2image import Html2Image
+from bs4 import BeautifulSoup
+from config import *
+
+def get_html_image(html):
+    hti = Html2Image(output_path='temp')
+    return hti.screenshot(html_str=html, size=(700, 1600))
+
+def get_last_messages():
+
+    mail = imaplib.IMAP4_SSL(IMAP4_SERVER)
+    mail.login(EMAIL_LOGIN, EMAIL_PASSWOARD)
+    
+    mail.list()
+    mail.select("inbox")
+
+
+    result, data = mail.search(None, "ALL")
+    
+    ids = data[0]
+    id_list = ids.split()
+
+    response = []
+
+    for email_id in id_list[-10:]:
+        result, data = mail.fetch(email_id, "(RFC822)")
+        raw_email = data[0][1]
+        raw_email_string = raw_email.decode('utf-8')
+        email_message = email.message_from_string(raw_email_string)
+        if email.utils.parseaddr(email_message['From'])[1] == FROM_EMAIL:
+            response.append(email_message)
+
+    return response
+
+
+def get_link_from_html(html):
+    with open('data.html', 'w') as f:
+        f.write(html)
+    soup = BeautifulSoup(html, 'lxml')
+    return soup.find_all("a", {"style": "color:#4674ca;font-size:16px;font-weight:600;margin-right:10px;text-decoration:none"})
+
+
+
+# print(email.utils.parseaddr(email_message['From']))
+# print(email_message['Date'])
+# print(email_message['Subject'])
+# print(email_message['Message-Id'])
+# print(email_message.get_payload(decode=True).decode('utf-8'))
