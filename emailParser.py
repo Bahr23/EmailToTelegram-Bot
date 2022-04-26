@@ -38,11 +38,3 @@ def get_last_messages():
 def get_link_from_html(html):
     soup = BeautifulSoup(html, 'lxml')
     return soup.find_all("a", {"style": "color:#4674ca;font-size:16px;font-weight:600;margin-right:10px;text-decoration:none"})
-
-
-
-# print(email.utils.parseaddr(email_message['From']))
-# print(email_message['Date'])
-# print(email_message['Subject'])
-# print(email_message['Message-Id'])
-# print(email_message.get_payload(decode=True).decode('utf-8'))
