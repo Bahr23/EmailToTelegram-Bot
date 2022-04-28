@@ -1,4 +1,3 @@
-import telegram
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode
 from telegram.ext import ConversationHandler
 
@@ -36,6 +35,25 @@ def help(update, context):
         )
 
 
+def chat_init(update, context):
+    if update.channel_post:
+        args = update.channel_post.text.split(' ')[1:]
+        if args:
+            if args[0] == PASSWORD:
+                subject = ' '.join(args[1:])
+                response = add_chat(subject, update.channel_post.chat.id)
+
+                if response:
+                    text = 'Чат успешно добавлен'
+                else:
+                    text = 'Используйте /chatinit [password] [email subject] в канале'
+                
+                context.bot.send_message(
+                    chat_id=update.channel_post.chat.id,
+                    text=text,
+                )
+
+
 def all_messages(update, context):
     if update.message.from_user.id in context.bot_data['auth-users']:
         text = "Я не знаю как на это ответить. Воспользуйтесь разделом 'Помощь' (/help)"
@@ -43,23 +61,6 @@ def all_messages(update, context):
             chat_id=update.effective_chat.id,
             text=text,
         )
-
-
-def chat_init(update, context):
-    if update.message.from_user.id in context.bot_data['auth-users']:
-        if context.args:
-            subject = ' '.join(context.args)
-            response = add_chat(subject, update.effective_chat.id)
-
-            if response:
-                text = 'Чат успешно добавлен'
-            else:
-                text = 'Используйте /chat_init [email subject] в канале'
-            
-            context.bot.send_message(
-                chat_id=update.effective_chat.id,
-                text=text,
-            )
 
 
 def my_chats(update, context):
