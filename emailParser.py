@@ -8,10 +8,13 @@ import io
 
 
 def get_html_image(html):
-    hti = Html2Image(output_path='temp')
-    im = Image.open(hti.screenshot(html_str=html, size=(800, 1500))[0])
-    box = (10, 100, im.width-10, im.height)
-    crop = im.crop(box)
+    try:
+        hti = Html2Image(output_path='temp')
+        im = Image.open(hti.screenshot(html_str=html, size=(800, 1500))[0])
+        box = (10, 100, im.width-10, im.height)
+        crop = im.crop(box)
+    except Exception as e:
+        print(e)
     return crop.save('temp/file.png', 'png')
 
 def get_last_messages():
