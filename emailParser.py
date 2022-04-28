@@ -1,21 +1,8 @@
 import imaplib
 import email
-from html2image import Html2Image
 from bs4 import BeautifulSoup
 from config import *
-from PIL import Image
-import io
 
-
-def get_html_image(html):
-    try:
-        hti = Html2Image(output_path='temp')
-        im = Image.open(hti.screenshot(html_str=html, size=(800, 1500))[0])
-        box = (10, 100, im.width-10, im.height)
-        crop = im.crop(box)
-    except Exception as e:
-        print(e)
-    return crop.save('temp/file.png', 'png')
 
 def get_last_messages():
 
@@ -24,7 +11,6 @@ def get_last_messages():
     
     mail.list()
     mail.select("inbox")
-
 
     result, data = mail.search(None, "ALL")
     

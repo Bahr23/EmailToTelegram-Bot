@@ -1,7 +1,10 @@
 import time
 
+from telegram import InlineKeyboardMarkup, InlineKeyboardButton
+
 from emailParser import *
 from chatsMananger import *
+from htmlParser import *
 
 
 def last_email(bot):
@@ -24,25 +27,28 @@ def last_email(bot):
                             
                             text = ''
                             html = message.get_payload(decode=True).decode('utf-8')
-                        
-                            links = get_link_from_html(html)
-                            
-                            for l in links:
-                                text += f"<a href='{l['href']}'>{l.text}</a>\n"
-                            
-                        
-                            get_html_image(html)
-                        
-                        
-                            in_file = open('temp/file.png', "rb")
-                            photo_byte = in_file.read()
-                            in_file.close()
 
-                            # photo_byte = get_html_image(html)
+                            msg = get_message_profile(html)
 
-                            bot.send_document(
+                            text = f"<b><a href='{msg['main-link']['href']}'>{msg['main-link']['text']}</a></b>" \
+                                   f"\n\n<b>Exception</b>\n<code>{msg['Exception']}</code>"
+                            if 'Request' in msg.keys():
+                                text += f"\n\n<b>Request</b>\n<i>URL</i> <a href='{msg['Request']['URL']['href']}'>" \
+                                   f"{msg['Request']['URL']['text']}</a>"
+                                if 'Query' in msg['Request'].keys():
+                                   text += f"\n<i>Query</i> <code>{msg['Request']['Query']}</code>"
+                            if 'User' in msg.keys():
+                                text += f"\n\n<b>User</b>\n<i>IP Address:</i> <code>{msg['User']}</code>"\
+
+                            print(text)
+
+                            reply_markup = InlineKeyboardMarkup([
+                                [InlineKeyboardButton(text="Go to Sentry", url=msg['main-link']['href'])]
+                            ])
+
+                            bot.send_message(
                                 chat_id=c['id'],
-                                caption=text,
-                                document=photo_byte,       
-                            ) 
+                                text=text,
+                                reply_markup=reply_markup
+                            )
         time.sleep(3)

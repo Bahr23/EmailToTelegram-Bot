@@ -8,6 +8,7 @@ from handlers import command_handler
 from check_emails import last_email
 from threading import Thread
 
+
 def main():
 
     defaults = Defaults(parse_mode=ParseMode.HTML)
@@ -22,10 +23,8 @@ def main():
 
     updater.start_polling()
 
-
     th = Thread(target=last_email(bot))
     th.start()
-
 
     updater.idle()
 
