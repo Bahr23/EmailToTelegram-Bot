@@ -31,16 +31,18 @@ def last_email(bot):
                                 text += f"<a href='{l['href']}'>{l.text}</a>\n"
                             
                         
-                            image_path = get_html_image(html)[0]
+                            get_html_image(html)
                         
                         
-                            in_file = open(image_path, "rb")
+                            in_file = open('temp/file.png', "rb")
                             photo_byte = in_file.read()
                             in_file.close()
 
-                            bot.send_photo(
+                            # photo_byte = get_html_image(html)
+
+                            bot.send_document(
                                 chat_id=c['id'],
                                 caption=text,
-                                photo=photo_byte,       
+                                document=photo_byte,       
                             ) 
         time.sleep(3)

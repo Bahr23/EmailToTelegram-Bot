@@ -3,10 +3,16 @@ import email
 from html2image import Html2Image
 from bs4 import BeautifulSoup
 from config import *
+from PIL import Image
+import io
+
 
 def get_html_image(html):
     hti = Html2Image(output_path='temp')
-    return hti.screenshot(html_str=html, size=(700, 1600))
+    im = Image.open(hti.screenshot(html_str=html, size=(800, 1500))[0])
+    box = (10, 100, im.width-10, im.height)
+    crop = im.crop(box)
+    return crop.save('temp/file.png', 'png')
 
 def get_last_messages():
 

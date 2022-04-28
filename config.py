@@ -1,7 +1,7 @@
 # Bot
 
 TOKEN = '' # Апи токен, полученный в @BotFather
-PASSWORD = 'root' # Пароль для доступа к боту 
+PASSWORD = '' # Пароль для доступа к боту 
 
 # Email settings
 
