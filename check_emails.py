@@ -22,16 +22,17 @@ def last_email(bot):
                         
                         if message['Message-id'] not in email_list:
                             
-                            with open('email_list.txt', 'a') as f:
-                                f.write(message['Message-Id'] + ',')
+                            
                             
                             text = ''
                             html = message.get_payload(decode=True).decode('utf-8')
 
                             msg = get_message_profile(html)
 
-                            text = f"<b><a href='{msg['main-link']['href']}'>{msg['main-link']['text']}</a></b>" \
-                                   f"\n\n<b>Exception</b>\n<code>{msg['Exception']}</code>"
+                            text = f"<b><a href='{msg['main-link']['href']}'>{msg['main-link']['text']}</a></b>"
+
+                            if 'Exception' in msg.keys():
+                                text += f"\n\n<b>Exception</b>\n<code>{msg['Exception']}</code>"
                             if 'Request' in msg.keys():
                                 text += f"\n\n<b>Request</b>\n<i>URL</i> <a href='{msg['Request']['URL']['href']}'>" \
                                    f"{msg['Request']['URL']['text']}</a>"
@@ -43,10 +44,14 @@ def last_email(bot):
                             reply_markup = InlineKeyboardMarkup([
                                 [InlineKeyboardButton(text="Go to Sentry", url=msg['main-link']['href'])]
                             ])
+                            
 
                             bot.send_message(
                                 chat_id=c['id'],
                                 text=text,
                                 reply_markup=reply_markup
                             )
+
+                            with open('email_list.txt', 'a') as f:
+                                f.write(message['Message-Id'] + ',')
         time.sleep(3)

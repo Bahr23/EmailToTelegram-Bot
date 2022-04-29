@@ -13,13 +13,17 @@ def get_message_profile(html):
                 "a",
                 {"style": "color:#4674ca;font-size:16px;font-weight:600;margin-right:10px;text-decoration:none"}
             )['href']
-        },
-        'Exception': soup.find(
-                "pre",
-                {"style": "background-color:#f4f5f6;border-radius:4px;color:#3d4649;font-family:'menlo' , 'monaco' , 'courier new' , monospace;font-size:14px;font-weight:normal;margin:0 0 15px 0;padding:15px;white-space:pre-wrap;word-wrap:break-word"}
-            ).text.replace('<', '≪').replace('>', '≫'),
-        'User': soup.find(string='IP Address:').find_next('td').text
+        }
     }
+
+    if soup.find_all('h3', string='Exception'):
+        response['Exception'] = {
+            soup.find( "pre", {"style": "background-color:#f4f5f6;border-radius:4px;color:#3d4649;font-family:'menlo' , 'monaco' , 'courier new' , monospace;font-size:14px;font-weight:normal;margin:0 0 15px 0;padding:15px;white-space:pre-wrap;word-wrap:break-word"}
+            ).text.replace('<', '≪').replace('>', '≫') 
+        }
+
+    if soup.find(string='IP Address:'):
+        response['User'] = {soup.find(string='IP Address:').find_next('td').text}
 
     if soup.find_all('h3', string='Request'):
         response['Request'] = {
