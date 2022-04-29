@@ -40,8 +40,6 @@ def last_email(bot):
                             if 'User' in msg.keys():
                                 text += f"\n\n<b>User</b>\n<i>IP Address:</i> <code>{msg['User']}</code>"\
 
-                            print(text)
-
                             reply_markup = InlineKeyboardMarkup([
                                 [InlineKeyboardButton(text="Go to Sentry", url=msg['main-link']['href'])]
                             ])
